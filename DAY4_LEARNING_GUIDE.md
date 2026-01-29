@@ -216,12 +216,12 @@ for item in get_items_generator():  # Memory: ~80 bytes
 
 ### Key Differences
 
-| Aspect | List | Generator |
-|--------|------|-----------|
-| **Memory** | Stores all items | Stores one item at a time |
-| **Speed** | All items created upfront | Items created as needed |
+| Aspect       | List                       | Generator |
+|--------------|----------------------------|-----------|
+| **Memory**   | Stores all items           | Stores one item at a time |
+| **Speed**    | All items created upfront  | Items created as needed |
 | **Reusable** | Can iterate multiple times | Can only iterate once |
-| **Use case** | Small datasets | Large datasets |
+| **Use case** | Small datasets             | Large datasets |
 
 ### Real Example from Our Code
 
