@@ -1,3 +1,4 @@
 *.tif
 *.tif.aux.xml
 sentinel1_downloads/
+__pycache__/
