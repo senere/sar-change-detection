@@ -1,7 +1,8 @@
 """Statistical analysis for SAR data."""
 import xarray as xr
-from typing import Dict, Optional
-from dask.diagnostics import ProgressBar
+from typing import Dict, Union
+from dask.diagnostics.progress import ProgressBar
+from collections.abc import Mapping
 
 
 class SARStatistics:
@@ -41,7 +42,7 @@ class SARStatistics:
         return {"mean": mean, "std": std}
     
     @staticmethod
-    def spatial_stats(data: xr.DataArray, compute: bool = True) -> Dict[str, float]:
+    def spatial_stats(data: xr.DataArray, compute: bool = True) -> Mapping[str, float | xr.DataArray]:
         """Compute spatial statistics for a single image.
         
         Args:
