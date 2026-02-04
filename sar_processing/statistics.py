@@ -1,5 +1,4 @@
 """Statistical analysis for SAR data."""
-
 import xarray as xr
 from typing import Dict, Optional
 from dask.diagnostics import ProgressBar
