@@ -1,4 +1,10 @@
-"""STAC catalog client for searching satellite data."""
+"""STAC catalog client for searching satellite data - Day 4 Enhanced Version.
+
+New features:
+- Logging at all levels (DEBUG, INFO, WARNING, ERROR)
+- Generator pattern for memory-efficient processing
+- Better error handling and feedback
+"""
 
 import logging
 from typing import List, Optional, Tuple, Generator
@@ -50,6 +56,7 @@ class STACClient:
             List of STAC items
         """
         search_limit = limit or self.config.limit
+        
         logger.info(f"Searching STAC catalog: bbox={bbox}, datetime={datetime}, limit={search_limit}")
         
         search = self.client.search(
