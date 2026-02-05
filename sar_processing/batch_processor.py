@@ -2,6 +2,10 @@
 
 import logging
 from typing import List, Dict, Tuple, Optional
+import dask
+from dask.delayed import delayed
+from dask.base import compute
+from dask.distributed import Client
 import xarray as xr
 from dataclasses import dataclass
 from tqdm import tqdm
@@ -50,6 +54,8 @@ class BatchProcessor:
         compute_stats: bool = True,
         compute_change: bool = True,
         show_progress: bool = True,
+        parallel: bool = False,
+        dask_client: Optional[Client] = None,
     ) -> Dict[str, Dict]:
         """Process multiple tasks.
         
@@ -64,45 +70,29 @@ class BatchProcessor:
             Dictionary mapping task name to results
         """
         results = {}
-        
         logger.info(f"Starting batch processing of {len(tasks)} tasks")
-        
-        # Use tqdm for progress tracking
-        task_iterator = tqdm(tasks, desc="Processing tasks", disable=not show_progress)
-        
-        for task in task_iterator:
-            task_iterator.set_description(f"Processing {task.name}")
+
+        def process_single_task(task: ProcessingTask):
             logger.info(f"Processing task: {task.name}")
-            
-            # Search and load data
             items = self.stac_client.search_and_sign(
                 bbox=task.bbox,
                 datetime=task.datetime,
             )
-            
             if len(items) == 0:
                 logger.warning(f"No items found for {task.name}")
-                results[task.name] = {"error": "No items found"}
-                continue
-            
+                return task.name, {"error": "No items found"}
             logger.debug(f"Found {len(items)} items for {task.name}")
-            
-            # Load data
             dataset = self.data_loader.load(
                 items=items,
                 bbox=task.bbox,
                 crs=task.crs,
             )
-            
             data = self.data_loader.get_polarization(dataset, polarization)
-            
             task_results = {
                 "num_items": len(items),
                 "shape": data.shape,
                 "data": data,
             }
-            
-            # Compute statistics
             if compute_stats and len(data.time) > 0:
                 try:
                     logger.debug(f"Computing statistics for {task.name}")
@@ -115,8 +105,6 @@ class BatchProcessor:
                     logger.info(f"Computed statistics for {task.name}")
                 except Exception as e:
                     logger.error(f"Error computing stats for {task.name}: {e}")
-            
-            # Compute change detection
             if compute_change and len(data.time) >= 2:
                 try:
                     logger.debug(f"Computing change detection for {task.name}")
@@ -126,9 +114,27 @@ class BatchProcessor:
                         logger.info(f"Computed change detection for {task.name}")
                 except Exception as e:
                     logger.error(f"Error computing change for {task.name}: {e}")
-            
-            results[task.name] = task_results
-        
+            return task.name, task_results
+
+        if parallel:
+            if dask_client is None:
+                dask_client = Client()
+            delayed_tasks = [delayed(process_single_task)(task) for task in tasks]
+            if show_progress:
+                from dask.diagnostics.progress import ProgressBar
+                with ProgressBar():
+                    results_list = compute(*delayed_tasks)
+            else:
+                results_list = compute(*delayed_tasks)
+            results = {name: result for name, result in results_list}
+        else:
+            results = {}
+            task_iterator = tqdm(tasks, desc="Processing tasks", disable=not show_progress)
+            for task in task_iterator:
+                task_iterator.set_description(f"Processing {task.name}")
+                name, result = process_single_task(task)
+                results[name] = result
+
         logger.info(f"Batch processing complete: processed {len(results)} tasks")
         return results
     
