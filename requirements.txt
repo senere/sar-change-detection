@@ -1,16 +1,38 @@
-pystac-client
-stackstac
-xarray
-dask[distributed]
-planetary-computer
-odc-stac
-numpy
-scipy
-rasterio
-rioxarray
-matplotlib
-shapely
-tqdm
-pytest
-pytest-cov
-rioxarray
+# Data access and processing
+pystac-client==0.9.0
+pystac==1.14.2
+stackstac==0.5.1
+xarray==2025.12.0
+dask[distributed]==2025.12.0
+planetary-computer==1.0.0
+odc-stac==0.5.0
+
+# Numerical and scientific computing
+numpy==2.4.0
+scipy==1.16.3
+rasterio==1.4.3
+rioxarray==0.20.0
+
+# Visualization
+matplotlib==3.10.8
+
+# Geospatial
+shapely==2.1.2
+pyproj==3.7.1
+
+# Utilities
+tqdm==4.67.1
+
+# Development and testing
+pytest==9.0.2
+pytest-cov==7.0.0
+
+# Jupyter/Notebook support
+ipython==9.8.0
+jupyter-client==8.7.0
+jupyter-core==5.9.1
+ipykernel==7.1.0
+
+# Optional but useful
+sentinelsat==1.2.1
+pandas==2.3.3

@@ -25,6 +25,7 @@ from sar_processing import STACClient, SARDataLoader, ChangeDetector, SARStatist
 ```
 
 See the example notebooks and scripts for end-to-end workflows.
+example_end_to_end.ipynb
 
 ## Testing
 Run tests with pytest:
