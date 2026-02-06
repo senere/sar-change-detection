@@ -156,21 +156,3 @@ def test_change_detection_scenarios(before, after, expected_change_type):
     elif expected_change_type == "large_increase":
         assert change_db > 6  # More than 6 dB
 
-
-# ============================================================
-# How to Run These Tests
-# ============================================================
-
-"""
-Run all tests:
-    pytest test_parametrize_tutorial.py -v
-
-Run specific test:
-    pytest test_parametrize_tutorial.py::test_double -v
-
-Run with specific parameter:
-    pytest test_parametrize_tutorial.py -v -k "1_to_0dB"
-
-See test names:
-    pytest test_parametrize_tutorial.py --collect-only
-"""
