@@ -26,7 +26,7 @@ conda activate sar-project
 
 # Install dependencies
 pip install -r requirements.txt
-
+```
 
 ## Installation
 Install dependencies from requirements.txt:
