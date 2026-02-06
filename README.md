@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# sar-change-detection
-Cloud-native SAR change detection using xarray and Dask
-=======
 # SAR Project
 
 A toolkit for processing Sentinel-1 SAR data, including change detection, statistics, visualization, and pytest practices.
@@ -68,6 +64,5 @@ pytest
 ## License
 Specify your license here.
 
----
-For more details, see the learning guides and notebooks included in the repository.
->>>>>>> develop
+
+
