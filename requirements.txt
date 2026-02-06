@@ -13,3 +13,4 @@ shapely
 tqdm
 pytest
 pytest-cov
+rioxarray
