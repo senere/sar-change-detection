@@ -1,6 +1,6 @@
-# SAR Project 1
+# SAR Project
 
-A toolkit for processing Sentinel-1 SAR data, including change detection, statistics, and visualization. 
+A toolkit for processing Sentinel-1 SAR data, including change detection, statistics, visualization, and pytest practices.
 
 ## Features
 - Batch processing for multiple regions and time periods
