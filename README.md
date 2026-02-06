@@ -42,8 +42,12 @@ Import the package in your Python code:
 from sar_processing import STACClient, SARDataLoader, ChangeDetector, SARStatistics, SARVisualizer, BatchProcessor
 ```
 
-See the example notebooks and scripts for end-to-end workflows.
-example_end_to_end.ipynb
+## Example Notebooks and Scripts
+
+For complete end-to-end workflows, refer to the example notebook:
+
+- [example_end_to_end.ipynb](example_end_to_end.ipynb)
+
 
 ## Testing
 Run tests with pytest:
