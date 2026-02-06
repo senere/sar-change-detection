@@ -1,23 +1,15 @@
-conda install -c conda-forge pystac-client stackstac xarray dask matplotlib sentinelsat
-pip install rasterio, tqdm, planetary-computer, odc-stac, scipy
-
-# Core dependencies
 pystac-client
 stackstac
 xarray
-dask
-matplotlib
-rasterio
+dask[distributed]
 planetary-computer
 odc-stac
 numpy
-
-# Testing
+scipy
+rasterio
+rioxarray
+matplotlib
+shapely
+tqdm
 pytest
 pytest-cov
-
-# Optional: distributed processing
-dask[distributed]
-
-# Optional: progress bars
-tqdm

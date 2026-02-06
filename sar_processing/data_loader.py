@@ -7,8 +7,7 @@ from odc.stac import load
 from .config import ProcessingConfig
 import numpy as np
 import scipy.ndimage
-from sar_processing.change_detection import ChangeDetector
-
+from .change_detection import ChangeDetector
 
 
 class SARDataLoader:
@@ -81,18 +80,25 @@ class SARDataLoader:
 
         # Apply speckle filtering if requested
         if speckle_filter:
-            # Apply median filter to each time slice
-            filtered = []
-            for i in range(data.shape[0]):
-                filtered_slice = scipy.ndimage.median_filter(data.isel(time=i).values, size=filter_size)
-                filtered.append(filtered_slice)
-            data = xr.DataArray(
-                np.stack(filtered),
-                coords=data.coords,
-                dims=data.dims,
-                name=data.name,
-                attrs=data.attrs
-            )
+            if "y" in data.dims and "x" in data.dims:
+                data = xr.apply_ufunc(
+                    scipy.ndimage.median_filter,
+                    data,
+                    kwargs={"size": filter_size},
+                    input_core_dims=[["y", "x"]],
+                    output_core_dims=[["y", "x"]],
+                    vectorize=True,
+                    dask="parallelized",
+                    output_dtypes=[data.dtype],
+                )
+            else:
+                data = xr.DataArray(
+                    scipy.ndimage.median_filter(data.values, size=filter_size),
+                    coords=data.coords,
+                    dims=data.dims,
+                    name=data.name,
+                    attrs=data.attrs,
+                )
 
         # Convert to dB if requested
         if to_db:

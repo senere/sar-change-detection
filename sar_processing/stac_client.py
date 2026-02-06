@@ -1,10 +1,4 @@
-"""STAC catalog client for searching satellite data - Day 4 Enhanced Version.
-
-New features:
-- Logging at all levels (DEBUG, INFO, WARNING, ERROR)
-- Generator pattern for memory-efficient processing
-- Better error handling and feedback
-"""
+"""STAC catalog client for searching satellite data."""
 
 import logging
 from typing import List, Optional, Tuple, Generator

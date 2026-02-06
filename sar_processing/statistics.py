@@ -1,9 +1,9 @@
 """Statistical analysis for SAR data."""
+
 import xarray as xr
-from typing import Dict, Union
+from typing import Dict, Optional, Sequence
 from dask.diagnostics.progress import ProgressBar
 from collections.abc import Mapping
-
 
 class SARStatistics:
     """Statistical computations for SAR data."""
@@ -60,14 +60,17 @@ class SARStatistics:
         }
         
         if compute:
-            stats = {k: float(v.compute()) for k, v in stats.items()}
-        
+            def to_scalar(value: xr.DataArray) -> float:
+                return float(value.compute()) if hasattr(value, "compute") else float(value)
+
+            stats = {k: to_scalar(v) for k, v in stats.items()}
+            
         return stats
     
     @staticmethod
     def percentiles(
         data: xr.DataArray,
-        percentiles: list = [10, 25, 50, 75, 90],
+        percentiles: Optional[Sequence[int]] = None,
         compute: bool = True,
     ) -> Dict[str, float]:
         """Compute percentiles.
@@ -80,7 +83,8 @@ class SARStatistics:
         Returns:
             Dictionary mapping percentile to value
         """
-        import numpy as np
+        if percentiles is None:
+            percentiles = [10, 25, 50, 75, 90]
         
         result = {}
         for p in percentiles:

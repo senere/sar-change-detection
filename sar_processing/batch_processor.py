@@ -1,12 +1,9 @@
-"""Batch processing for multiple regions and time periods - Day 4 Enhanced Version."""
-
+"""Batch processing for multiple regions and time periods."""
 import logging
 from typing import List, Dict, Tuple, Optional
-import dask
 from dask.delayed import delayed
 from dask.base import compute
 from dask.distributed import Client
-import xarray as xr
 from dataclasses import dataclass
 from tqdm import tqdm
 from .stac_client import STACClient
@@ -65,7 +62,7 @@ class BatchProcessor:
             compute_stats: Whether to compute temporal statistics
             compute_change: Whether to compute change detection
             show_progress: Whether to show progress bar
-            
+            parallel: Whether to process tasks in parallel
         Returns:
             Dictionary mapping task name to results
         """
@@ -117,16 +114,23 @@ class BatchProcessor:
             return task.name, task_results
 
         if parallel:
+            created_client = False
             if dask_client is None:
                 dask_client = Client()
-            delayed_tasks = [delayed(process_single_task)(task) for task in tasks]
-            if show_progress:
-                from dask.diagnostics.progress import ProgressBar
-                with ProgressBar():
+                created_client = True
+
+            try:
+                delayed_tasks = [delayed(process_single_task)(task) for task in tasks]
+                if show_progress:
+                    from dask.diagnostics.progress import ProgressBar
+                    with ProgressBar():
+                        results_list = compute(*delayed_tasks)
+                else:
                     results_list = compute(*delayed_tasks)
-            else:
-                results_list = compute(*delayed_tasks)
-            results = {name: result for name, result in results_list}
+                results = {name: result for name, result in results_list}
+            finally:
+                if created_client:
+                    dask_client.close()
         else:
             results = {}
             task_iterator = tqdm(tasks, desc="Processing tasks", disable=not show_progress)
