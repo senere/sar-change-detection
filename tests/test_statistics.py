@@ -6,6 +6,7 @@ import xarray as xr
 from sar_processing.statistics import SARStatistics
 
 
+
 def test_temporal_stats(sample_sar_data):
     """Test temporal statistics computation."""
     stats = SARStatistics.temporal_stats(sample_sar_data, compute=True, show_progress=False)

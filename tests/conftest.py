@@ -4,6 +4,7 @@ import pytest
 import numpy as np
 import xarray as xr
 from datetime import datetime, timedelta
+import dask.array as da
 
 
 @pytest.fixture
@@ -18,30 +19,24 @@ def sample_datetime_range():
     return "2022-01-01/2022-01-31"
 
 
+
 @pytest.fixture
 def sample_sar_data():
     """Create sample SAR data for testing."""
     # Create synthetic SAR data
     np.random.seed(42)
-    
-    # Dimensions
     times = [datetime(2022, 1, 1) + timedelta(days=i*10) for i in range(3)]
     x = np.arange(100)
     y = np.arange(100)
-    
-    # Create data with some spatial structure
-    data_values = np.random.gamma(2, 0.5, (3, 100, 100))
-    
-    # Create DataArray
+    # Use Dask array for lazy evaluation
+    data_values = da.from_array(np.random.gamma(2, 0.5, (3, 100, 100)), chunks=(1, 100, 100))
     data = xr.DataArray(
         data_values,
         coords={"time": times, "y": y, "x": x},
         dims=["time", "y", "x"],
         name="vv",
     )
-    
     return data
-
 
 @pytest.fixture
 def sample_dataset(sample_sar_data):

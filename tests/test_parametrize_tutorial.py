@@ -66,9 +66,9 @@ def test_to_db_conversion(value, expected):
 ])
 def test_log10_invalid_inputs(input):
     """Test that log10 raises error for invalid inputs."""
-    with pytest.raises((ValueError, RuntimeWarning)):
-        result = 10 * np.log10(input)
-
+    with np.errstate(divide='raise', invalid='raise'):
+        with pytest.raises(FloatingPointError):
+            result = 10 * np.log10(input)
 
 # ============================================================
 # Example 5: Combining Parametrize with Fixtures

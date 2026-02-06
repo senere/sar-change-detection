@@ -434,10 +434,14 @@ def test_progress_bar_disabled(mock_tqdm):
     
     mock_stac_client.search_and_sign.return_value = []
     
-    # Mock tqdm to return a simple iterable
-    mock_tqdm.return_value = [
+    # Mock tqdm to return a simple iterable with set_description method
+    class FakeTqdm(list):
+        def set_description(self, desc):
+            pass
+
+    mock_tqdm.return_value = FakeTqdm([
         ProcessingTask("task1", (13.0, 52.0, 14.0, 53.0), "2022-01-01/2022-01-31")
-    ]
+    ])
     
     processor.process_tasks(
         [ProcessingTask("task1", (13.0, 52.0, 14.0, 53.0), "2022-01-01/2022-01-31")],
