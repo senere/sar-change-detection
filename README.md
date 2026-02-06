@@ -10,6 +10,24 @@ A toolkit for processing Sentinel-1 SAR data, including change detection, statis
 - Visualization tools
 - Comprehensive test suite
 
+
+## Environment Setup
+
+### Using Conda (Recommended)
+
+Create a conda environment with Python 3.12.12:
+
+```bash
+# Create environment
+conda create -n sar-project python=3.12.12
+
+# Activate environment
+conda activate sar-project
+
+# Install dependencies
+pip install -r requirements.txt
+
+
 ## Installation
 Install dependencies from requirements.txt:
 
