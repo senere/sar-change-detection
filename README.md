@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| <img src="images/output.png" alt="SAR Processing" width="200"> | A toolkit for processing Sentinel-1 SAR data, including change detection, statistics, visualization, and pytest practices. |
+| <img src="images/output.png" alt="SAR Processing" width="400"> | A toolkit for processing Sentinel-1 SAR data, including change detection, statistics, visualization, and pytest practices. |
 
 ## Features
 - Batch processing for multiple regions and time periods
